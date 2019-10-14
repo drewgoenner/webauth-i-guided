@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const db = require('./database/dbConfig.js');
 const Users = require('./users/users-model.js');
+const bcrypt = require('bcryptjs')
 
 const server = express();
 
@@ -51,6 +52,19 @@ server.get('/api/users', (req, res) => {
     })
     .catch(err => res.send(err));
 });
+
+server.get('/hash', (req, res) => {
+  //read a password from the Authorization header
+  //return an object with the password hashed using bcryptjs
+  const creds = req.body
+  const hash = bcrypt.hashSync(creds.password, 14);
+  creds.password = hash
+  // bcrypt.compareSync("$tuff", hash)
+
+  console.log(hash)
+  
+
+})
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => console.log(`\n** Running on port ${port} **\n`));
